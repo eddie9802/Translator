@@ -15,9 +15,20 @@ def encrypt_file(fileName):
             line = line.rstrip('\n')
             encryptedLine = ""
             for char in line:
-                newCharNum = ord(char) + 10
-                newChar = chr(newCharNum)
-                encryptedLine += newChar
+                # last character 'z' has value 122, after that value weird characters appears
+                if ord(char) > 112:
+                    newCharNum = 96 + (10 - (122 - ord(char)))
+                    newChar = chr(newCharNum)
+                    encryptedLine += newChar
+                # 32 == spacebar
+                elif ord(char) == 32:
+                    newCharNum = ord(char)
+                    newChar = chr(newCharNum)
+                    encryptedLine += newChar
+                else:
+                    newCharNum = ord(char) + 10
+                    newChar = chr(newCharNum)
+                    encryptedLine += newChar
             encryptedLines.append(encryptedLine + '\n')
 
         encryptedLines.insert(0, "ENCRYPTED\n")
@@ -44,9 +55,19 @@ def decrypt_file(fileName):
             line = line.rstrip('\n')
             decryptedLine = ""
             for char in line:
-                newCharNum = ord(char) - 10
-                newChar = chr(newCharNum)
-                decryptedLine += newChar
+                # 32 == spacebar
+                if ord(char) == 32:
+                    newCharNum = ord(char)
+                    newChar = chr(newCharNum)
+                    decryptedLine += newChar
+                elif ord(char) < 107:
+                    newCharNum =  123 - (10 - (ord(char) - 97))
+                    newChar = chr(newCharNum)
+                    decryptedLine += newChar
+                else:
+                    newCharNum = ord(char) - 10
+                    newChar = chr(newCharNum)
+                    decryptedLine += newChar
             decryptedLines.append(decryptedLine + '\n')
 
         # Writes the newly decrypted lines to the file 
@@ -65,4 +86,3 @@ if (args.e):
     encrypt_file(args.e)
 elif (args.d):
     decrypt_file(args.d)
-    
